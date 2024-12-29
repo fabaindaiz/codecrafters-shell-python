@@ -29,7 +29,7 @@ def _type(args: list[str]):
     if command_file:
         return (f"{command} is {command_file}\n", "")
     
-    return (f"{command}: not found\n", "")
+    return ("", f"{command}: not found\n")
 
 def _pwd(args: list[str]):
     return (os.getcwd() + "\n", "")
@@ -40,9 +40,9 @@ def _cd(args: list[str]):
 
     if os.path.exists(folder):
         os.chdir(folder)
-        return (None, None)
+        return ("", None)
     
-    return (f"cd: {folder}: No such file or directory\n", None)
+    return ("", f"cd: {folder}: No such file or directory\n")
 
 
 DEFAULT_REDIRECT = sys.stdout.write
@@ -175,9 +175,8 @@ def main():
             process_args = filter_redirect(user_input)
             process = subprocess.Popen(args=process_args, stdout=subprocess.PIPE, shell=True)
             output, error = process.communicate()
-            error_str = error.decode() if error else ""
             stdout(output.decode())
-            stderr(error_str)
+            stderr(error.decode() if error else "")
             process.wait()
             continue
         
