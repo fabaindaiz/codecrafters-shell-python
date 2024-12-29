@@ -154,11 +154,11 @@ def main():
         if command_file:
             #os.system(user_input)
             process_args = filter_redirect(user_input)
-            process = subprocess.Popen(args=process_args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+            process = subprocess.Popen(args=process_args, stdout=subprocess.PIPE, shell=True)
             output, error = process.communicate()
-            exit_code = process.wait()
             redirect(output.decode())
-            redirect(error.decode())
+            #redirect(error.decode())
+            process.wait()
             continue
         
         sys.stdout.write(f"{command}: command not found\n")
