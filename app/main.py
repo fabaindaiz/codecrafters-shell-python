@@ -122,6 +122,7 @@ def parse_params(params: str):
             case ">":
                 is_default_redirect = False
                 is_stdout = True
+                continue
             case "1>":
                 is_default_redirect = False
                 is_stdout = True
@@ -148,7 +149,7 @@ def main():
         
         command_file = search_file_in_path(command)
         if command_file:
-            popen = subprocess.Popen(user_input)
+            popen = subprocess.Popen(args=params, executable=command_file, stdout=subprocess.PIPE)
             while popen.stdout.readable():
                 redirect(popen.stdout.read())
             popen.wait()
