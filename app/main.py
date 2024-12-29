@@ -119,8 +119,12 @@ def parse_params(params: str):
                     return wrapper
                 custom_redirect = stdout_redirect(custom_redirect)
 
+            case ">":
+                is_default_redirect = False
+                is_stdout = True
             case "1>":
                 is_default_redirect = False
+                is_stdout = True
                 continue
 
             case _:
