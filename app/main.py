@@ -135,7 +135,7 @@ def parse_params(params: str):
     return command, args, redirect
 
 def filter_redirect(user_input: str):
-    return user_input.split(">", 1)[0].split("1>", 1)[0]
+    return user_input.split("1>", 1)[0].split(">", 1)[0]
 
 def main():
     while True:
