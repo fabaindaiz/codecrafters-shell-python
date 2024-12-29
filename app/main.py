@@ -57,18 +57,13 @@ BUILTIN = {
 }   
 
 def parse_input(input: str):
-    if input.find(" ") == -1:
-        return input, []
-    
-    command, chars = input.split(" ", 1)
-
     actual = ""
     params: list[str] = []
     is_scaped = False
     in_single = False
     in_double = False
 
-    for char in chars:
+    for char in input:
         match char:
             case _ if is_scaped:
                 if in_double and char not in SCAPED_CHARS:
@@ -105,6 +100,8 @@ def parse_input(input: str):
     if actual != "":
         params.append(actual)
 
+    command = params[0]
+    params = params[1:]
     return command, params
 
 def main():
