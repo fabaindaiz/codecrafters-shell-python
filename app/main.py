@@ -40,7 +40,7 @@ def _cd(args: list[str]):
 
     if os.path.exists(folder):
         os.chdir(folder)
-        return ("", None)
+        return ("", "")
     
     return ("", f"cd: {folder}: No such file or directory\n")
 
@@ -167,7 +167,7 @@ def main():
         if command in BUILTIN:
             output, error = BUILTIN[command](args)
             stdout(output)
-            stderr(error.decode() if error else "")
+            stderr(error)
             continue
         
         command_file = search_file_in_path(command)
