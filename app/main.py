@@ -135,7 +135,7 @@ def parse_params(params: str):
     return command, args, redirect
 
 def filter_redirect(user_input: str):
-    return user_input.split(">")[0].split("1>")[0]
+    return user_input.split(">", 1)[0].split("1>", 1)[0]
 
 def main():
     while True:
@@ -153,10 +153,11 @@ def main():
         command_file = search_file_in_path(command)
         if command_file:
             #os.system(user_input)
-            popen_args = filter_redirect(user_input)
-            popen = subprocess.Popen(args=popen_args, stdout=subprocess.PIPE, shell=True)
-            redirect(popen.stdout.read().decode())
-            popen.wait()
+            process_args = filter_redirect(user_input)
+            process = subprocess.Popen(args=process_args, stdout=subprocess.PIPE, shell=True)
+            output, _ = process.communicate()
+            redirect(output.decode())
+            process.wait()
             continue
         
         sys.stdout.write(f"{command}: command not found\n")
