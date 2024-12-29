@@ -60,10 +60,10 @@ def parse_input(input: str):
     
     command, chars = input.split(" ", 1)
 
+    actual = ""
     params: list[str] = []
     in_single = False
     in_double = False
-    actual = ""
 
     for char in chars:
         match char:
@@ -72,21 +72,14 @@ def parse_input(input: str):
                 if actual != "":
                     params.append(actual)
                     actual = ""
-            case "'":
-                if in_double:
-                    actual += char
-                    continue
-
+                continue
+            case "'" if not in_double:
                 in_single = not in_single
                 if actual != "":
                     params.append(actual)
                     actual = ""
                 continue
-            case " ":
-                if in_double:
-                    actual += char
-                    continue
-
+            case " " if not in_double:
                 if in_single:
                     actual += char
                 elif actual != "":
