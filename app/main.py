@@ -125,6 +125,8 @@ def main():
         command_file = search_file_in_path(command)
         if command_file:
             popen = subprocess.Popen(user_input)
+            while popen.stdout.readable():
+                sys.stdout.write(popen.stdout.read())
             popen.wait()
             continue
         
