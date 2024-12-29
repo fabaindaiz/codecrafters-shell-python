@@ -7,7 +7,9 @@ def main():
         sys.stdout.write("$ ")
 
         # Wait for user input
-        command, params = input().split(" ", 1)
+        parsed_input = input().split(" ")
+        command = parsed_input[0]
+        params = parsed_input[1:]
 
         match command:
             case "exit":
