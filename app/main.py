@@ -87,8 +87,7 @@ def parse_input(input: str):
                 if in_single:
                     params.append(actual)
                     actual = ""
-                else:
-                    in_single = True
+                in_single = not in_single
             case " ":
                 if in_single:
                     actual += char
@@ -96,8 +95,7 @@ def parse_input(input: str):
                     params.append(actual)
                     actual = ""
             case _:
-                if in_single:
-                    actual += char
+                actual += char
 
     return command, params
 
