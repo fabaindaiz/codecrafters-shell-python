@@ -27,10 +27,10 @@ def main():
                 case "type":
                     # hardcoded for now
                     path_location = search_file_in_path(params[0])
-                    if path_location:
-                        sys.stdout.write(f"{params[0]} is {path_location}\n")
-                    elif params[0] in BUILTIN:
+                    if params[0] in BUILTIN:
                         sys.stdout.write(f"{params[0]} is a shell builtin\n")
+                    elif path_location:
+                        sys.stdout.write(f"{params[0]} is {path_location}\n")
                     else:
                         sys.stdout.write(f"{params[0]}: not found\n")
                 case "exit":
