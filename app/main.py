@@ -1,6 +1,6 @@
 import sys
 
-BUILTIN = ["exit", "echo"]
+BUILTIN = ["type", "exit", "echo"]
 
 def main():
     while True:
