@@ -107,7 +107,6 @@ def parse_input(input: str):
 
     return command, params
 
-
 def main():
     while True:
         sys.stdout.write("$ ")
@@ -115,15 +114,15 @@ def main():
         # Wait for user input
         user_input = input()
         command, params = parse_input(user_input)
-
+        
         if command in BUILTIN:
             BUILTIN[command](params)
-            return
+            continue
         
         command_file = search_file_in_path(command)
         if command_file:
             os.system(user_input)
-            return
+            continue
         
         sys.stdout.write(f"{command}: command not found\n")
 
