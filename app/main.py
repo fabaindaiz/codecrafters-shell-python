@@ -54,9 +54,52 @@ BUILTIN = {
     "cd": _cd,
 }
 
+def parse_params(input: list[str], params: list[str], acc: str = ""):
+    if len(input[0]):
+        return params
+    
+    actual = input[0]
+    next = input[1:]
+
+    if acc == "":
+        if not actual.startswith("'"):
+            params = params.append(actual)
+            return parse_params(next, params)
+        
+        else:
+            return parse_params(next, params, actual[1:])
+    
+    if actual.endswith("'"):
+        acc += actual[:-1]
+    
+
+
 def parse_input(input: str):
-    splited = input.split(" ")
-    return splited[0], splited[1:]
+    command, rest = input.split(" ", 1)
+
+    params: list[str] = []
+    in_single = False
+    actual = ""
+
+    for char in params:
+        match char:
+            case "'":
+                if in_single:
+                    params.append(actual)
+                    actual = ""
+                else:
+                    in_single = True
+            case " ":
+                if in_single:
+                    actual += char
+                else:
+                    params.append(actual)
+                    actual = ""
+            case _:
+                if in_single:
+                    actual += char
+
+    return command, params
 
 def execute_command(command: str, params: list[str]):
     if command in BUILTIN:
