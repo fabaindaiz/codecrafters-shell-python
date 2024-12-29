@@ -76,13 +76,13 @@ def parse_input(input: str):
             case "'" if not in_double:
                 in_single = not in_single
                 continue
+            case "\\":
+                is_scaped = True
+                continue
             case _ if in_single:
                 actual += char
                 continue
 
-            case "\\":
-                is_scaped = True
-                continue
             case "\"":
                 in_double = not in_double
                 continue
