@@ -134,6 +134,9 @@ def parse_params(params: str):
     redirect = DEFAULT_REDIRECT if is_default_redirect else custom_redirect
     return command, args, redirect
 
+def filter_redirect(user_input: str):
+    return user_input.split(">")[0].split("1>")[0]
+
 def main():
     while True:
         sys.stdout.write("$ ")
@@ -149,7 +152,7 @@ def main():
         
         command_file = search_file_in_path(command)
         if command_file:
-            popen_args = user_input
+            popen_args = filter_redirect(user_input)
             popen = subprocess.Popen(args=popen_args,  stdout=subprocess.PIPE)
             redirect(popen.stdout.read().decode())
             popen.wait()
