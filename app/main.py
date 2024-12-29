@@ -38,7 +38,7 @@ def _pwd(params: list[str]):
 
 def _cd(params: list[str]):
     folder = params[0] if len(params) > 0 else HOME
-    folder.replace("~", HOME)
+    folder.replace('~', HOME)
 
     if os.path.exists(folder):
         os.chdir(folder)
