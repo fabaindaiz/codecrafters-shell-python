@@ -108,7 +108,7 @@ def parse_params(params: str):
     args: list[str] = []
 
     is_stdout = False
-    for param in params:
+    for param in params[1:]:
         match param:
             case _ if is_stdout:
                 def stdout_redirect(func):
