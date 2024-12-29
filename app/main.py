@@ -167,7 +167,7 @@ def main():
         if command in BUILTIN:
             output, error = BUILTIN[command](args)
             stdout(output)
-            stderr(error)
+            stderr(error.decode() if error else "")
             continue
         
         command_file = search_file_in_path(command)
