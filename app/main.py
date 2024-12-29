@@ -1,5 +1,6 @@
 import os
 import sys
+import subprocess
 
 
 HOME = os.getenv("HOME")
@@ -12,16 +13,16 @@ def search_file_in_path(file_name):
     return None
 
 
-def _exit(params: list[str]):
-    exit_code = int(params[0])
+def _exit(args: list[str]):
+    exit_code = int(args[0])
     sys.exit(exit_code)
 
-def _echo(params: list[str]):
-    echo_str = " ".join(params) + "\n"
+def _echo(args: list[str]):
+    echo_str = " ".join(args) + "\n"
     sys.stdout.write(echo_str)
 
-def _type(params: list[str]):
-    command = params[0]
+def _type(args: list[str]):
+    command = args[0]
     if command in BUILTIN:
         sys.stdout.write(f"{command} is a shell builtin\n")
         return
@@ -33,12 +34,12 @@ def _type(params: list[str]):
     
     sys.stdout.write(f"{command}: not found\n")
 
-def _pwd(params: list[str]):
+def _pwd(args: list[str]):
     cwd_str = os.getcwd() + "\n"
     sys.stdout.write(cwd_str)
 
-def _cd(params: list[str]):
-    folder = params[0] if len(params) > 0 else HOME
+def _cd(args: list[str]):
+    folder = args[0] if len(args) > 0 else HOME
     folder = folder.replace('~', HOME)
 
     if os.path.exists(folder):
@@ -99,10 +100,14 @@ def parse_input(input: str):
     
     if actual != "":
         params.append(actual)
+    return params
 
+def parse_params(params: str):
     command = params[0]
-    params = params[1:]
-    return command, params
+    args = params[1:]
+    redirect = lambda x:x
+    return command, args, redirect
+
 
 def main():
     while True:
@@ -110,15 +115,17 @@ def main():
 
         # Wait for user input
         user_input = input()
-        command, params = parse_input(user_input)
+        params = parse_input(user_input)
+        command, args, redirect = parse_params(params)
         
         if command in BUILTIN:
-            BUILTIN[command](params)
+            redirect(BUILTIN[command](args))
             continue
         
         command_file = search_file_in_path(command)
         if command_file:
-            os.system(user_input)
+            popen = subprocess.Popen(user_input)
+            popen.wait()
             continue
         
         sys.stdout.write(f"{command}: command not found\n")
