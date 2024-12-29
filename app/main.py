@@ -168,6 +168,7 @@ def main():
             output, error = BUILTIN[command](args)
             stdout(output)
             stderr(error)
+            continue
         
         command_file = search_file_in_path(command)
         if command_file:
