@@ -76,7 +76,7 @@ def parse_input(input: str):
                 if in_double:
                     actual += char
                     continue
-                
+
                 in_single = not in_single
                 if actual != "":
                     params.append(actual)
@@ -108,7 +108,7 @@ def execute_command(command: str, params: list[str]):
     
     command_file = search_file_in_path(command)
     if command_file:
-        params = map(lambda x: f"'{x}'", params)
+        params = map(lambda x: f'"{x}"', params)
         os.system(f"{command_file} {" ".join(params)}")
         return
     
