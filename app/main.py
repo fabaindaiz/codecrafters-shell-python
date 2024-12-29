@@ -1,6 +1,7 @@
 import os
 import sys
 
+
 HOME = os.getenv("HOME")
 PATH = os.getenv("PATH").split(":")
 
@@ -46,6 +47,7 @@ def _cd(params: list[str]):
         sys.stdout.write(f"cd: {folder}: No such file or directory\n")
 
 
+SCAPED_CHARS = ['\\', '$', '"', 'n']
 BUILTIN = {
     "exit": _exit,
     "echo": _echo,
@@ -69,6 +71,9 @@ def parse_input(input: str):
     for char in chars:
         match char:
             case _ if is_scaped:
+                if char not in SCAPED_CHARS:
+                    actual += '\\'
+
                 is_scaped = False
                 actual += char
                 continue
@@ -109,7 +114,7 @@ def execute_command(command: str, params: list[str]):
     
     command_file = search_file_in_path(command)
     if command_file:
-        params = map(lambda x: f'"{x}"', params)
+        params = map(lambda x: f"'{x}'", params)
         os.system(f"{command_file} {" ".join(params)}")
         return
     
