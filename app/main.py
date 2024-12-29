@@ -177,6 +177,7 @@ def filter_redirect(user_input: str):
         user_input = user_input.split(operator, 1)[0]
     return user_input
 
+
 def main():
     while True:
         sys.stdout.write("$ ")
