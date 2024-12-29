@@ -39,7 +39,7 @@ def main():
                 case "echo":
                     sys.stdout.write(" ".join(params) + "\n")
         
-        path_location = search_file_in_path(params[0])
+        path_location = search_file_in_path(command)
         if path_location:
             os.execv(path_location, params)
         else:
