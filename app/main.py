@@ -42,7 +42,7 @@ def execute_command(command: str, params: list[str]):
         BUILTIN[command](params)
         return
     
-    path_location = search_file_in_path(params[0])
+    path_location = search_file_in_path(command)
     if path_location:
         os.system(f"{path_location} {' '.join(params)}")
         return
