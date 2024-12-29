@@ -38,10 +38,11 @@ def main():
                     sys.exit(exit_code)
                 case "echo":
                     sys.stdout.write(" ".join(params) + "\n")
+            return
         
         path_location = search_file_in_path(command)
         if path_location:
-            os.execvp(path_location, params)
+            os.system(f"{path_location} {' '.join(params)}")
         else:
             sys.stdout.write(f"{command}: command not found\n")
 
