@@ -32,6 +32,8 @@ def main():
                     sys.stdout.write(f"{params[0]} is {path_location}\n")
                 else:
                     sys.stdout.write(f"{params[0]}: not found\n")
+            case "pwd":
+                sys.stdout.write(f"{os.getcwd()}\n")
             case "exit":
                 exit_code = int(params[0])
                 sys.exit(exit_code)
