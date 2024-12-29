@@ -1,28 +1,45 @@
 import os
 import sys
 
+HOME = os.getenv("HOME")
+PATH = os.getenv("PATH").split(":")
+
+def search_file_in_path(file_name):
+    for path in PATH:
+        if os.path.exists(f"{path}/{file_name}"):
+            return f"{path}/{file_name}"
+    return None
+
+
 def _exit(params: list[str]):
-    sys.exit(int(params[0]))
+    exit_code = int(params[0])
+    sys.exit(exit_code)
 
 def _echo(params: list[str]):
-    sys.stdout.write(" ".join(params) + "\n")
+    echo_str = " ".join(params) + "\n"
+    sys.stdout.write(echo_str)
 
 def _type(params: list[str]):
-    if params[0] in BUILTIN:
-        sys.stdout.write(f"{params[0]} is a shell builtin\n")
+    command = params[0]
+    if command in BUILTIN:
+        sys.stdout.write(f"{command} is a shell builtin\n")
         return
     
-    path_location = search_file_in_path(params[0])
-    if path_location:
-        sys.stdout.write(f"{params[0]} is {path_location}\n")
+    command_file = search_file_in_path(command)
+    if command_file:
+        sys.stdout.write(f"{command} is {command_file}\n")
         return
     
-    sys.stdout.write(f"{params[0]}: not found\n")
+    sys.stdout.write(f"{command}: not found\n")
 
 def _pwd(params: list[str]):
-    sys.stdout.write(f"{os.getcwd()}\n")
+    cwd_str = os.getcwd() + "\n"
+    sys.stdout.write(cwd_str)
 
 def _cd(params: list[str]):
+    folder = params[0] if len(params) > 0 else HOME
+    folder.replace("~", HOME)
+
     if os.path.exists(params[0]):
         os.chdir(params[0])
     else:
@@ -42,23 +59,13 @@ def execute_command(command: str, params: list[str]):
         BUILTIN[command](params)
         return
     
-    path_location = search_file_in_path(command)
-    if path_location:
-        os.system(f"{path_location} {' '.join(params)}")
+    command_file = search_file_in_path(command)
+    if command_file:
+        params_str = " ".join(params)
+        os.system(f"{command_file} {params_str}")
         return
     
     sys.stdout.write(f"{command}: command not found\n")
-
-
-ENV = os.getenv("PATH")
-
-env_paths = ENV.split(":")
-
-def search_file_in_path(file_name):
-    for path in env_paths:
-        if os.path.exists(f"{path}/{file_name}"):
-            return f"{path}/{file_name}"
-    return None
 
 
 def parse_input(input: str):
