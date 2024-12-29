@@ -46,6 +46,7 @@ def _cd(args: list[str]):
 
 
 DEFAULT_REDIRECT = sys.stdout.write
+REDIRECT_OPERATORS = ["2>>", "2>", "1>>", "1>", ">>", ">"]
 SCAPED_CHARS = ['\\', '$', '"', 'n']
 BUILTIN = {
     "exit": _exit,
@@ -111,12 +112,13 @@ def parse_params(params: str):
 
     is_stdout = False
     is_stderr = False
+    mode = "w"
     for param in params[1:]:
         match param:
             case _ if is_stdout:
                 def stdout_redirect(func):
                     def wrapper(text: str):
-                        with open(param, "w") as file:
+                        with open(param, mode) as file:
                             file.write(func(text))
                             return text
                     return wrapper
@@ -125,7 +127,7 @@ def parse_params(params: str):
             case _ if is_stderr:
                 def stderr_redirect(func):
                     def wrapper(text: str):
-                        with open(param, "w") as file:
+                        with open(param, mode) as file:
                             file.write(func(text))
                             return text
                     return wrapper
@@ -134,15 +136,33 @@ def parse_params(params: str):
             case ">":
                 is_default_stdout = False
                 is_stdout = True
+                mode = "w"
+                continue
+            case ">>":
+                is_default_stdout = False
+                is_stdout = True
+                mode = "a"
                 continue
             case "1>":
                 is_default_stdout = False
                 is_stdout = True
+                mode = "a"
+                continue
+            case "1>>":
+                is_default_stdout = False
+                is_stdout = True
+                mode = "a"
                 continue
 
             case "2>":
                 is_default_stderr = False
                 is_stderr = True
+                mode = "w"
+                continue
+            case "2>>":
+                is_default_stderr = False
+                is_stderr = True
+                mode = "a"
                 continue
 
             case _:
@@ -153,7 +173,9 @@ def parse_params(params: str):
     return command, args, stdout, stderr
 
 def filter_redirect(user_input: str):
-    return user_input.split("2>", 1)[0].split("1>", 1)[0].split(">", 1)[0]
+    for operator in REDIRECT_OPERATORS:
+        user_input = user_input.split(operator, 1)[0]
+    return user_input
 
 def main():
     while True:
