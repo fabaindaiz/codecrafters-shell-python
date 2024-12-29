@@ -151,7 +151,7 @@ def main():
         if command_file:
             popen = subprocess.Popen(args=args, executable=command_file, stdout=subprocess.PIPE)
             while popen.stdout.readable():
-                redirect(popen.stdout.read())
+                redirect(popen.stdout.read().decode())
             popen.wait()
             continue
         
