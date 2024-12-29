@@ -112,9 +112,10 @@ def parse_params(params: str):
         match param:
             case _ if is_stdout:
                 def stdout_redirect(func):
-                    def wrapper(*args, **kwargs):
+                    def wrapper(_input: str):
                         with open(param, "w") as file:
-                            file.write(func(*args, **kwargs))
+                            file.write(func(_input))
+                            return _input
                     return wrapper
                 custom_redirect = stdout_redirect(custom_redirect)
 
@@ -145,7 +146,7 @@ def main():
         if command_file:
             popen = subprocess.Popen(user_input)
             while popen.stdout.readable():
-                sys.stdout.write(popen.stdout.read())
+                redirect(popen.stdout.read())
             popen.wait()
             continue
         
