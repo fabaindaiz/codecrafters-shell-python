@@ -154,9 +154,10 @@ def main():
         if command_file:
             #os.system(user_input)
             process_args = filter_redirect(user_input)
-            process = subprocess.Popen(args=process_args, stdout=subprocess.PIPE, shell=True)
-            output, _ = process.communicate()
+            process = subprocess.Popen(args=process_args, stdout=subprocess.PIPE, stderr=subprocess.PIPE shell=True)
+            output, error = process.communicate()
             redirect(output.decode())
+            redirect(error.decode())
             process.wait()
             continue
         
