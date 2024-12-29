@@ -55,7 +55,9 @@ BUILTIN = {
 }   
 
 def parse_input(input: str):
-    command, chars = input.split(" ", 1)
+    splited = input.split(" ")
+    command = splited[0]
+    chars = splited[1:]
 
     params: list[str] = []
     in_single = False
