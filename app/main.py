@@ -86,7 +86,7 @@ def parse_input(input: str):
             case "\"":
                 in_double = not in_double
                 continue
-            case "\\":
+            case "\\" if not in_double:
                 is_scaped = True
                 continue
 
@@ -112,7 +112,7 @@ def execute_command(command: str, params: list[str]):
     
     command_file = search_file_in_path(command)
     if command_file:
-        params = map(lambda x: f'"{x}"', params)
+        params = map(lambda x: f"'{x}'", params)
         os.system(f"{command_file} {" ".join(params)}")
         return
     
