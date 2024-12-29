@@ -157,10 +157,8 @@ def main():
             process = subprocess.Popen(args=process_args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
             output, error = process.communicate()
             exit_code = process.wait()
-            if exit_code == 0:
-                redirect(output.decode())
-            else:
-                redirect(error.decode())
+            redirect(output.decode())
+            redirect(error.decode())
             continue
         
         sys.stdout.write(f"{command}: command not found\n")
