@@ -17,10 +17,10 @@ def _exit(args: list[str]):
     exit_code = int(args[0])
     sys.exit(exit_code)
 
-def _echo(args: list[str]) -> str:
+def _echo(args: list[str]):
     return (" ".join(args) + "\n", "")
 
-def _type(args: list[str]) -> str:
+def _type(args: list[str]):
     command = args[0]
     if command in BUILTIN:
         return (f"{command} is a shell builtin\n", "")
@@ -40,9 +40,9 @@ def _cd(args: list[str]):
 
     if os.path.exists(folder):
         os.chdir(folder)
-        return ("", "")
+        return (None, None)
     
-    return (f"cd: {folder}: No such file or directory\n", "")
+    return (f"cd: {folder}: No such file or directory\n", None)
 
 
 DEFAULT_REDIRECT = sys.stdout.write
@@ -132,16 +132,16 @@ def parse_params(params: str):
                 custom_stderr = stderr_redirect(custom_stderr)
 
             case ">":
-                is_default_redirect = False
+                is_default_stdout = False
                 is_stdout = True
                 continue
             case "1>":
-                is_default_redirect = False
+                is_default_stdout = False
                 is_stdout = True
                 continue
 
             case "2>":
-                is_default_redirect = False
+                is_default_stderr = False
                 is_stderr = True
                 continue
 
@@ -175,8 +175,9 @@ def main():
             process_args = filter_redirect(user_input)
             process = subprocess.Popen(args=process_args, stdout=subprocess.PIPE, shell=True)
             output, error = process.communicate()
+            error_str = error.decode() if error else ""
             stdout(output.decode())
-            stderr(error.decode())
+            stderr(error_str)
             process.wait()
             continue
         
