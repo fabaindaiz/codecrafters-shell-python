@@ -88,12 +88,14 @@ def parse_input(input: str):
                     params.append(actual)
                     actual = ""
                 in_single = not in_single
+                continue
             case " ":
                 if in_single:
                     actual += char
                 else:
                     params.append(actual)
                     actual = ""
+                continue
             case _:
                 actual += char
     
