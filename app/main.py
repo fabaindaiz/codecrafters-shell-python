@@ -85,13 +85,11 @@ def parse_input(input: str):
 
             case "\"":
                 in_double = not in_double
-                if actual != "":
-                    params.append(actual)
-                    actual = ""
                 continue
-            case "\\" if not in_double:
+            case "\\":
                 is_scaped = True
                 continue
+
             case " " if not in_double:
                 if in_single:
                     actual += char
