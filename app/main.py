@@ -55,10 +55,11 @@ BUILTIN = {
 }   
 
 def parse_input(input: str):
-    splited = input.split(" ")
-    command = splited[0]
-    chars = splited[1:]
-
+    if input.find(" ") == -1:
+        return input, []
+    
+    command, chars = input.split(" ", 1)
+    
     params: list[str] = []
     in_single = False
     actual = ""
