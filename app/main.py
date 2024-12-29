@@ -146,7 +146,7 @@ def parse_params(params: str):
             case "1>":
                 is_default_stdout = False
                 is_stdout = True
-                mode = "a"
+                mode = "w"
                 continue
             case "1>>":
                 is_default_stdout = False
@@ -195,7 +195,7 @@ def main():
         
         command_file = search_file_in_path(command)
         if command_file:
-            process_args = filter_redirect(user_input)
+            process_args = filter_redirect(user_input).replace(command, command_file)
             process = subprocess.Popen(args=process_args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
             output, error = process.communicate()
             stdout(output.decode())
