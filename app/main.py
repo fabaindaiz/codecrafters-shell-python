@@ -1,7 +1,7 @@
 import os
 import sys
 
-BUILTIN = ["type", "exit", "echo"]
+BUILTIN = ["type", "exit", "pwd", "echo"]
 ENV = os.getenv("PATH")
 
 env_paths = ENV.split(":")
