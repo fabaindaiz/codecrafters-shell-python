@@ -11,12 +11,12 @@ def main():
 
         command = user_input[0]
 
-        match user_input:
+        match command:
             case "exit":
-                exit_code = int(command[1])
+                exit_code = int(user_input[1])
                 sys.exit(exit_code)
-
-        sys.stdout.write(f"{user_input}: command not found\n")
+            case _:
+                sys.stdout.write(f"{command}: command not found\n")
 
 if __name__ == "__main__":
     main()
