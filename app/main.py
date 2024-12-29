@@ -52,27 +52,7 @@ BUILTIN = {
     "type": _type,
     "pwd": _pwd,
     "cd": _cd,
-}
-
-def parse_params(input: list[str], params: list[str], acc: str = ""):
-    if len(input[0]):
-        return params
-    
-    actual = input[0]
-    next = input[1:]
-
-    if acc == "":
-        if not actual.startswith("'"):
-            params = params.append(actual)
-            return parse_params(next, params)
-        
-        else:
-            return parse_params(next, params, actual[1:])
-    
-    if actual.endswith("'"):
-        acc += actual[:-1]
-    
-
+}   
 
 def parse_input(input: str):
     command, chars = input.split(" ", 1)
@@ -111,6 +91,7 @@ def execute_command(command: str, params: list[str]):
     
     command_file = search_file_in_path(command)
     if command_file:
+        params = map(params, lambda x: f"'{x}'")
         os.system(f"{command_file} {" ".join(params)}")
         return
     
