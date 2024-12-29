@@ -40,10 +40,10 @@ def _cd(params: list[str]):
     folder = params[0] if len(params) > 0 else HOME
     folder.replace("~", HOME)
 
-    if os.path.exists(params[0]):
-        os.chdir(params[0])
+    if os.path.exists(folder):
+        os.chdir(folder)
     else:
-        sys.stdout.write(f"cd: {params[0]}: No such file or directory\n")
+        sys.stdout.write(f"cd: {folder}: No such file or directory\n")
 
 
 BUILTIN = {
