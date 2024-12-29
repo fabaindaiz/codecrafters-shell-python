@@ -18,21 +18,21 @@ def _exit(args: list[str]):
     sys.exit(exit_code)
 
 def _echo(args: list[str]) -> str:
-    return " ".join(args) + "\n"
+    return (" ".join(args) + "\n", "")
 
 def _type(args: list[str]) -> str:
     command = args[0]
     if command in BUILTIN:
-        return f"{command} is a shell builtin\n"
+        return (f"{command} is a shell builtin\n", "")
     
     command_file = search_file_in_path(command)
     if command_file:
-        return f"{command} is {command_file}\n"
+        return (f"{command} is {command_file}\n", "")
     
-    return f"{command}: not found\n"
+    return (f"{command}: not found\n", "")
 
 def _pwd(args: list[str]):
-    return os.getcwd() + "\n"
+    return (os.getcwd() + "\n", "")
 
 def _cd(args: list[str]):
     folder = args[0] if len(args) > 0 else HOME
@@ -40,9 +40,9 @@ def _cd(args: list[str]):
 
     if os.path.exists(folder):
         os.chdir(folder)
-        return ""
+        return ("", "")
     
-    return f"cd: {folder}: No such file or directory\n"
+    return (f"cd: {folder}: No such file or directory\n", "")
 
 
 DEFAULT_REDIRECT = sys.stdout.write
@@ -101,23 +101,35 @@ def parse_input(input: str):
     return params
 
 def parse_params(params: str):
-    is_default_redirect = True
-    custom_redirect = lambda x: x
+    is_default_stdout = True
+    is_default_stderr = True
+    custom_stdout = lambda out: out
+    custom_stderr = lambda err: err
 
     command = params[0]
     args: list[str] = []
 
     is_stdout = False
+    is_stderr = False
     for param in params[1:]:
         match param:
             case _ if is_stdout:
                 def stdout_redirect(func):
-                    def wrapper(_input: str):
+                    def wrapper(text: str):
                         with open(param, "w") as file:
-                            file.write(func(_input))
-                            return _input
+                            file.write(func(text))
+                            return text
                     return wrapper
-                custom_redirect = stdout_redirect(custom_redirect)
+                custom_stdout = stdout_redirect(custom_stdout)
+            
+            case _ if is_stderr:
+                def stderr_redirect(func):
+                    def wrapper(text: str):
+                        with open(param, "w") as file:
+                            file.write(func(text))
+                            return text
+                    return wrapper
+                custom_stderr = stderr_redirect(custom_stderr)
 
             case ">":
                 is_default_redirect = False
@@ -128,11 +140,17 @@ def parse_params(params: str):
                 is_stdout = True
                 continue
 
+            case "2>":
+                is_default_redirect = False
+                is_stderr = True
+                continue
+
             case _:
                 args.append(param)
 
-    redirect = DEFAULT_REDIRECT if is_default_redirect else custom_redirect
-    return command, args, redirect
+    stdout = DEFAULT_REDIRECT if is_default_stdout else custom_stdout
+    stderr = DEFAULT_REDIRECT if is_default_stderr else custom_stderr
+    return command, args, stdout, stderr
 
 def filter_redirect(user_input: str):
     return user_input.split("1>", 1)[0].split(">", 1)[0]
@@ -144,20 +162,21 @@ def main():
         # Wait for user input
         user_input = input()
         params = parse_input(user_input)
-        command, args, redirect = parse_params(params)
+        command, args, stdout, stderr = parse_params(params)
         
         if command in BUILTIN:
-            redirect(BUILTIN[command](args))
+            out, err = BUILTIN[command](args)
+            stdout(out)
+            stderr(err)
             continue
         
         command_file = search_file_in_path(command)
         if command_file:
-            #os.system(user_input)
             process_args = filter_redirect(user_input)
             process = subprocess.Popen(args=process_args, stdout=subprocess.PIPE, shell=True)
             output, error = process.communicate()
-            redirect(output.decode())
-            #redirect(error.decode())
+            stdout(output.decode())
+            stderr(error.decode())
             process.wait()
             continue
         
