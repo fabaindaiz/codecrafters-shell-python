@@ -38,7 +38,7 @@ def _pwd(params: list[str]):
 
 def _cd(params: list[str]):
     folder = params[0] if len(params) > 0 else HOME
-    folder.replace('~', HOME)
+    folder = folder.replace('~', HOME)
 
     if os.path.exists(folder):
         os.chdir(folder)
@@ -54,6 +54,10 @@ BUILTIN = {
     "cd": _cd,
 }
 
+def parse_input(input: str):
+    splited = input.split(" ")
+    return splited[0], splited[1:]
+
 def execute_command(command: str, params: list[str]):
     if command in BUILTIN:
         BUILTIN[command](params)
@@ -61,16 +65,10 @@ def execute_command(command: str, params: list[str]):
     
     command_file = search_file_in_path(command)
     if command_file:
-        params_str = " ".join(params)
-        os.system(f"{command_file} {params_str}")
+        os.system(f"{command_file} {" ".join(params)}")
         return
     
     sys.stdout.write(f"{command}: command not found\n")
-
-
-def parse_input(input: str):
-    splited = input.split(" ")
-    return splited[0], splited[1:]
 
 
 def main():
