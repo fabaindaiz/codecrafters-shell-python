@@ -17,26 +17,22 @@ def _exit(args: list[str]):
     exit_code = int(args[0])
     sys.exit(exit_code)
 
-def _echo(args: list[str]):
-    echo_str = " ".join(args) + "\n"
-    sys.stdout.write(echo_str)
+def _echo(args: list[str]) -> str:
+    return " ".join(args) + "\n"
 
-def _type(args: list[str]):
+def _type(args: list[str]) -> str:
     command = args[0]
     if command in BUILTIN:
-        sys.stdout.write(f"{command} is a shell builtin\n")
-        return
+        return f"{command} is a shell builtin\n"
     
     command_file = search_file_in_path(command)
     if command_file:
-        sys.stdout.write(f"{command} is {command_file}\n")
-        return
+        return f"{command} is {command_file}\n"
     
-    sys.stdout.write(f"{command}: not found\n")
+    return f"{command}: not found\n"
 
 def _pwd(args: list[str]):
-    cwd_str = os.getcwd() + "\n"
-    sys.stdout.write(cwd_str)
+    return os.getcwd() + "\n"
 
 def _cd(args: list[str]):
     folder = args[0] if len(args) > 0 else HOME
@@ -44,10 +40,12 @@ def _cd(args: list[str]):
 
     if os.path.exists(folder):
         os.chdir(folder)
+        return ""
     else:
-        sys.stdout.write(f"cd: {folder}: No such file or directory\n")
+        return "cd: {folder}: No such file or directory\n"
 
 
+DEFAULT_REDIRECT = sys.stdout.write
 SCAPED_CHARS = ['\\', '$', '"', 'n']
 BUILTIN = {
     "exit": _exit,
@@ -103,11 +101,32 @@ def parse_input(input: str):
     return params
 
 def parse_params(params: str):
-    command = params[0]
-    args = params[1:]
-    redirect = lambda x:x
-    return command, args, redirect
+    is_default_redirect = True
+    custom_redirect = lambda x: x
 
+    command = params[0]
+    args: list[str] = []
+
+    is_stdout = False
+    for param in params:
+        match param:
+            case _ if is_stdout:
+                def stdout_redirect(func):
+                    def wrapper(*args, **kwargs):
+                        with open(param, "w") as file:
+                            file.write(func(*args, **kwargs))
+                    return wrapper
+                custom_redirect = stdout_redirect(custom_redirect)
+
+            case "1>":
+                is_default_redirect = False
+                continue
+
+            case _:
+                args.append(param)
+
+    redirect = DEFAULT_REDIRECT if is_default_redirect else custom_redirect
+    return command, args, redirect
 
 def main():
     while True:
