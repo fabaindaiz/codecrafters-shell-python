@@ -1,9 +1,9 @@
 import sys
 import subprocess
 
-from builtin import BUILTIN
-from parse import parse_input, parse_params, filter_redirect
-from utils import search_file_in_path
+from app.builtin import BUILTIN
+from app.parse import parse_input, parse_params, filter_redirect
+from app.utils import search_file_in_path
 
 def main():
     while True:
