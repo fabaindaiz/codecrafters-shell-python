@@ -71,8 +71,8 @@ def parse_input(input: str):
     for char in chars:
         match char:
             case _ if is_scaped:
-                if char not in SCAPED_CHARS:
-                    actual += '\\\\'
+                if in_double and char not in SCAPED_CHARS:
+                    actual += '\\'
 
                 is_scaped = False
                 actual += char
