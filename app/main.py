@@ -72,14 +72,15 @@ def parse_input(input: str):
             continue
 
         match char:
+            case "\\" if not in_double:
+                is_scaped = True
+                continue
             case "\"":
                 in_double = not in_double
                 if actual != "":
                     params.append(actual)
                     actual = ""
                 continue
-            case "\\" if not in_double:
-                is_scaped = True
             case "'" if not in_double:
                 in_single = not in_single
                 if actual != "":
