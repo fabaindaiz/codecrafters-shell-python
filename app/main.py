@@ -41,7 +41,7 @@ def main():
         
         path_location = search_file_in_path(command)
         if path_location:
-            os.execve(path_location, params)
+            os.execvp(path_location, params)
         else:
             sys.stdout.write(f"{command}: command not found\n")
 
