@@ -68,6 +68,7 @@ def parse_input(input: str):
 
     for char in chars:
         if is_scaped:
+            is_scaped = False
             actual += char
             continue
 
