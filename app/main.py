@@ -91,7 +91,7 @@ def execute_command(command: str, params: list[str]):
     
     command_file = search_file_in_path(command)
     if command_file:
-        params = map(params, lambda x: f"'{x}'")
+        params = map(lambda x: f"'{x}'", params)
         os.system(f"{command_file} {" ".join(params)}")
         return
     
