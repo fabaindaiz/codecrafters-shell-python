@@ -76,13 +76,13 @@ def parse_input(input: str):
             case "'" if not in_double:
                 in_single = not in_single
                 continue
-            case "\\":
-                is_scaped = True
-                continue
             case _ if in_single:
                 actual += char
                 continue
 
+            case "\\":
+                is_scaped = True
+                continue
             case "\"":
                 in_double = not in_double
                 continue
@@ -109,7 +109,7 @@ def execute_command(command: str, params: list[str]):
     
     command_file = search_file_in_path(command)
     if command_file:
-        params = map(lambda x: f"'{x}'", params)
+        params = map(lambda x: f'"{x}"', params)
         os.system(f"{command_file} {" ".join(params)}")
         return
     
