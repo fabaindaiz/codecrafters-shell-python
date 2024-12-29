@@ -7,14 +7,14 @@ def main():
         sys.stdout.write("$ ")
 
         # Wait for user input
-        user_input = input().split(" ")
-
-        command = user_input[0]
+        command, params = input().split(" ", 1)
 
         match command:
             case "exit":
-                exit_code = int(user_input[1])
+                exit_code = int(params[0])
                 sys.exit(exit_code)
+            case "echo":
+                sys.stdout.write(" ".join(params) + "\n")
             case _:
                 sys.stdout.write(f"{command}: command not found\n")
 
