@@ -150,8 +150,7 @@ def main():
         command_file = search_file_in_path(command)
         if command_file:
             popen = subprocess.Popen(args=args, executable=command_file, stdout=subprocess.PIPE)
-            while popen.poll() and popen.stdout:
-                redirect(popen.stdout.read().decode())
+            redirect(popen.stdout.read().decode())
             popen.wait()
             continue
         
