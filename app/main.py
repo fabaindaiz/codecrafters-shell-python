@@ -1,6 +1,16 @@
+import os
 import sys
 
 BUILTIN = ["type", "exit", "echo"]
+ENV = os.getenv("PATH")
+
+env_paths = ENV.split(":")
+
+def search_file_in_path(file_name):
+    for path in env_paths:
+        if os.path.exists(f"{path}/{file_name}"):
+            return f"{path}/{file_name}"
+    return None
 
 def main():
     while True:
@@ -16,7 +26,10 @@ def main():
             match command:
                 case "type":
                     # hardcoded for now
-                    if params[0] in BUILTIN:
+                    path_location = search_file_in_path(params[0])
+                    if path_location:
+                        sys.stdout.write(f"{params[0]} is {path_location}\n")
+                    elif params[0] in BUILTIN:
                         sys.stdout.write(f"{params[0]} is a shell builtin\n")
                     else:
                         sys.stdout.write(f"{params[0]}: not found\n")
