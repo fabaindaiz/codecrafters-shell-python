@@ -108,17 +108,7 @@ def parse_input(input: str):
     return command, params
 
 def execute_command(command: str, params: list[str]):
-    if command in BUILTIN:
-        BUILTIN[command](params)
-        return
     
-    command_file = search_file_in_path(command)
-    if command_file:
-        params = map(lambda x: f"'{x}'", params)
-        os.system(f"{command_file} {" ".join(params)}")
-        return
-    
-    sys.stdout.write(f"{command}: command not found\n")
 
 
 def main():
@@ -129,6 +119,20 @@ def main():
         user_input = input()
 
         command, params = parse_input(user_input)
+
+        if command in BUILTIN:
+            BUILTIN[command](params)
+            return
+        
+        command_file = search_file_in_path(command)
+        if command_file:
+            os.system(user_input)
+            return
+        
+        sys.stdout.write(f"{command}: command not found\n")
+
+
+        
         execute_command(command, params)
 
 if __name__ == "__main__":
