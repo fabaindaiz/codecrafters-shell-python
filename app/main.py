@@ -153,7 +153,7 @@ def parse_params(params: str):
     return command, args, stdout, stderr
 
 def filter_redirect(user_input: str):
-    return user_input.split("1>", 1)[0].split(">", 1)[0]
+    return user_input.split("2>", 1)[0].split("1>", 1)[0].split(">", 1)[0]
 
 def main():
     while True:
@@ -165,10 +165,9 @@ def main():
         command, args, stdout, stderr = parse_params(params)
         
         if command in BUILTIN:
-            out, err = BUILTIN[command](args)
-            stdout(out)
-            stderr(err)
-            continue
+            output, error = BUILTIN[command](args)
+            stdout(output)
+            stderr(error)
         
         command_file = search_file_in_path(command)
         if command_file:
