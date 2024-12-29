@@ -75,13 +75,13 @@ def parse_params(input: list[str], params: list[str], acc: str = ""):
 
 
 def parse_input(input: str):
-    command, rest = input.split(" ", 1)
+    command, chars = input.split(" ", 1)
 
     params: list[str] = []
     in_single = False
     actual = ""
 
-    for char in params:
+    for char in chars:
         match char:
             case "'":
                 if in_single:
@@ -96,6 +96,9 @@ def parse_input(input: str):
                     actual = ""
             case _:
                 actual += char
+    
+    if actual != "":
+        params.append(actual)
 
     return command, params
 
