@@ -1,5 +1,6 @@
 import sys
 
+BUILTIN = ["exit", "echo"]
 
 def main():
     while True:
@@ -11,14 +12,21 @@ def main():
         command = parsed_input[0]
         params = parsed_input[1:]
 
-        match command:
-            case "exit":
-                exit_code = int(params[0])
-                sys.exit(exit_code)
-            case "echo":
-                sys.stdout.write(" ".join(params) + "\n")
-            case _:
-                sys.stdout.write(f"{command}: command not found\n")
+        if command in BUILTIN:
+            match command:
+                case "type":
+                    # hardcoded for now
+                    if params[0] in BUILTIN:
+                        sys.stdout.write(f"{params[0]} is a shell builtin\n")
+                    else:
+                        sys.stdout.write(f"{params[0]}: not found\n")
+                case "exit":
+                    exit_code = int(params[0])
+                    sys.exit(exit_code)
+                case "echo":
+                    sys.stdout.write(" ".join(params) + "\n")
+        else:
+            sys.stdout.write(f"{command}: command not found\n")
 
 if __name__ == "__main__":
     main()
