@@ -84,10 +84,9 @@ def parse_input(input: str):
     for char in chars:
         match char:
             case "'":
-                if in_single:
-                    params.append(actual)
-                    actual = ""
                 in_single = not in_single
+                params.append(actual)
+                actual = ""
                 continue
             case " ":
                 if in_single:
