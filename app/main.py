@@ -41,8 +41,8 @@ def _cd(args: list[str]):
     if os.path.exists(folder):
         os.chdir(folder)
         return ""
-    else:
-        return "cd: {folder}: No such file or directory\n"
+    
+    return f"cd: {folder}: No such file or directory\n"
 
 
 DEFAULT_REDIRECT = sys.stdout.write
