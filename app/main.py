@@ -107,9 +107,6 @@ def parse_input(input: str):
 
     return command, params
 
-def execute_command(command: str, params: list[str]):
-    
-
 
 def main():
     while True:
@@ -117,7 +114,6 @@ def main():
 
         # Wait for user input
         user_input = input()
-
         command, params = parse_input(user_input)
 
         if command in BUILTIN:
@@ -130,10 +126,6 @@ def main():
             return
         
         sys.stdout.write(f"{command}: command not found\n")
-
-
-        
-        execute_command(command, params)
 
 if __name__ == "__main__":
     main()
