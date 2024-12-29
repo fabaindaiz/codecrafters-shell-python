@@ -1,7 +1,7 @@
 import os
 import sys
 
-BUILTIN = ["type", "exit", "pwd", "echo"]
+BUILTIN = ["type", "cd", "exit", "pwd", "echo"]
 ENV = os.getenv("PATH")
 
 env_paths = ENV.split(":")
@@ -34,6 +34,11 @@ def main():
                     sys.stdout.write(f"{params[0]}: not found\n")
             case "pwd":
                 sys.stdout.write(f"{os.getcwd()}\n")
+            case "cd":
+                if os.path.exists(params[0]):
+                    os.chdir(params[0])
+                else:
+                    sys.stdout.write(f"cd: {params[0]}: No such file or directory\n")
             case "exit":
                 exit_code = int(params[0])
                 sys.exit(exit_code)
