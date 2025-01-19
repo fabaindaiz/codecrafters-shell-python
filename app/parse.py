@@ -45,7 +45,7 @@ def parse_input(input: str):
     
     if actual != "":
         params.append(actual)
-    return params
+    return params, tab
 
 
 def out_redirect(func, path: str, mode: str):
